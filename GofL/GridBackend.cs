@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GofL.Properties;
 
 namespace GofL
 {
@@ -59,7 +60,7 @@ namespace GofL
 
                     return;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(seedPattern), seedPattern, "Invalid pattern");
+                    throw new ArgumentOutOfRangeException(nameof(seedPattern), seedPattern, Resources.GridBackend_Seed_Invalid_pattern);
             }
         }
 
