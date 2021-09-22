@@ -5,6 +5,16 @@
     /// </summary>
     public enum SeedPattern
     {
-        Random
+        Random,
+        Plus,
+        Cross,
+        DiagonalUpDown,
+        DiagonalReversed,
+        HorizontalLine,
+        VerticalLine,
+        FilledSquare,
+        EmptySquare,
+        RightArrow,
+        LeftArrow
     }
 }

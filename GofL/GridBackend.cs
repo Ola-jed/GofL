@@ -38,34 +38,141 @@ namespace GofL
 
         /// <summary>
         /// Seed our grid following a pattern
-        /// TODO handle more patterns
         /// </summary>
         /// <param name="seedPattern">The pattern for seeding</param>
         /// <param name="numberOfRandomCells">The number of cells to put if the seed pattern is set to random</param>
         /// <exception cref="ArgumentOutOfRangeException">If the pattern is not existing</exception>
-        public void Seed(SeedPattern seedPattern,int numberOfRandomCells = 10)
+        public void Seed(SeedPattern seedPattern, int numberOfRandomCells = 10)
         {
             switch (seedPattern)
             {
                 case SeedPattern.Random:
-                    var rd = new Random();
-                    for (var i = 0; i < numberOfRandomCells; i++)
-                    {
-                        var (x, y) = (rd.Next(Rows - 1), rd.Next(Cols - 1));
-                        _cells[x, y] = new Cell()
-                        {
-                            Status = Status.Living
-                        };
-                    }
-
+                    SeedRandom(numberOfRandomCells);
+                    return;
+                case SeedPattern.Plus:
+                    SeedPlus();
+                    return;
+                case SeedPattern.Cross:
+                    SeedCross();
+                    return;
+                case SeedPattern.DiagonalUpDown:
+                    SeedDiagonalUpDown();
+                    return;
+                case SeedPattern.DiagonalReversed:
+                    SeedDiagonalReversed();
+                    return;
+                case SeedPattern.HorizontalLine:
+                    SeedHorizontalLine();
+                    return;
+                case SeedPattern.VerticalLine:
+                    SeedVerticalLine();
+                    return;
+                case SeedPattern.FilledSquare:
+                    return;
+                case SeedPattern.EmptySquare:
+                    return;
+                case SeedPattern.RightArrow:
+                    SeedRightArrow();
+                    return;
+                case SeedPattern.LeftArrow:
                     return;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(seedPattern), seedPattern, Resources.GridBackend_Seed_Invalid_pattern);
+                    throw new ArgumentOutOfRangeException(nameof(seedPattern), seedPattern,
+                        Resources.GridBackend_Seed_Invalid_pattern);
             }
         }
 
         /// <summary>
-        /// Fill all our cells following a pattern
+        /// Set the living status following a random pattern
+        /// </summary>
+        private void SeedRandom(int numberOfRandomCells)
+        {
+            var rd = new Random();
+            for (var i = 0; i < numberOfRandomCells; i++)
+            {
+                var (x, y) = (rd.Next(Rows - 1), rd.Next(Cols - 1));
+                _cells[x, y] = new Cell()
+                {
+                    Status = Status.Living
+                };
+            }
+        }
+
+        private void SeedPlus()
+        {
+            SeedHorizontalLine();
+            SeedVerticalLine();
+        }
+
+        private void SeedHorizontalLine()
+        {
+            var usedRow = (int)Math.Ceiling(Rows * 1.0 / 2.0) - 1;
+            for (var i = 0; i < Cols; i++)
+            {
+                _cells[usedRow, i].Status = Status.Living;
+            }
+        }
+
+        private void SeedVerticalLine()
+        {
+            var usedColumn = (int)Math.Ceiling(Cols / 2.0) - 1;
+            for (var i = 0; i < Rows; i++)
+            {
+                _cells[i, usedColumn].Status = Status.Living;
+            }
+        }
+
+        private void SeedCross()
+        {
+            SeedDiagonalUpDown();
+            SeedDiagonalReversed();
+        }
+
+        private void SeedDiagonalUpDown()
+        {
+            var minCount = Math.Min(Cols, Rows);
+            for (var i = 0; i < minCount; i++)
+            {
+                _cells[i, i].Status = Status.Living;
+            }
+        }
+
+        private void SeedDiagonalReversed()
+        {
+            var minCount = Math.Min(Cols, Rows) - 1;
+            for (var i = 0; i <= minCount; i++)
+            {
+                _cells[i, minCount - i].Status = Status.Living;
+            }
+        }
+
+        private void SeedRightArrow()
+        {
+            // The top of the arrow
+            var minCount = Math.Min(Cols, Rows) / 2;
+            for (var i = 0; i < minCount; i++)
+            {
+                _cells[i, i].Status = Status.Living;
+            }
+            // Bottom of the arrow
+            minCount = (Math.Min(Cols, Rows) - 1);
+            for (var j = 0; j <= minCount; j++)
+            {
+                if (j < minCount / 2)
+                {
+                    continue;
+                }
+                _cells[j, minCount - j].Status = Status.Living;
+            }
+        }
+
+        private void SeedLeftArrow()
+        {
+
+        }
+
+        /// <summary>
+        /// Fill all our cells with the given status
         /// </summary>
         /// <param name="status"></param>
         public void Fill(Status status)
@@ -82,8 +189,6 @@ namespace GofL
             }
         }
 
-
-
         /// <summary>
         /// Make a simulation for all the cells
         /// </summary>
@@ -93,7 +198,7 @@ namespace GofL
             {
                 for (var j = 0; j < Cols; j++)
                 {
-                    _cells[i, j].Status = GetNextCellStatus(i,j);
+                    _cells[i, j].Status = GetNextCellStatus(i, j);
                 }
             }
         }

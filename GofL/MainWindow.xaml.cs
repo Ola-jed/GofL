@@ -13,8 +13,11 @@ namespace GofL
     /// </summary>
     public partial class MainWindow
     {
+        /// <summary>
+        /// For better patterns, the grid should be a square i.e, Columns = Rows
+        /// </summary>
         private const int Columns = 15;
-        private const int Rows = 15;
+        private const int Rows = Columns;
         private readonly GridBackend _gridBackend = new(Rows,Columns);
         private readonly Dictionary<Status, SolidColorBrush> _statusColors = new()
         {
@@ -54,25 +57,23 @@ namespace GofL
         /// <summary>
         /// Start the simulation when the "Apply" button is clicked
         /// Handle the choice made by the user
-        /// TODO : add more patterns
+        /// Cast the combobox to enum and handle
         /// </summary>
         /// <param name="sender">The sender object</param>
         /// <param name="e">The event args</param>
         private void StartAutomaton(object sender, RoutedEventArgs e)
         {
             var chosenPattern = PatternComboBox.Text;
-            switch (chosenPattern)
+            var isValid = Enum.TryParse(chosenPattern, out SeedPattern pattern);
+            if (!isValid)
             {
-                case "Random":
-                    _gridBackend.Seed(SeedPattern.Random);
-                    UpdateUi(_gridBackend.GetCellsStatuses());
-                    _automatonTimer.Interval = TimeSpan.FromSeconds(1);
-                    _automatonTimer.IsEnabled = true;
-                    break;
-                default:
-                    MessageBox.Show("Choose a pattern before");
-                    return;
+                MessageBox.Show("Choose a pattern before");
+                return;
             }
+            _gridBackend.Seed(pattern);
+            UpdateUi(_gridBackend.GetCellsStatuses());
+            _automatonTimer.Interval = TimeSpan.FromSeconds(1);
+            _automatonTimer.IsEnabled = true;
         }
 
         /// <summary>

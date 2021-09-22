@@ -4,14 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:GofL"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="GofL" Height="600" Width="700">
 
     <Window.Resources>
-        <x:Array x:Key="ComboBoxItems" Type="sys:String">
-            <sys:String>Random</sys:String>
-        </x:Array>
+        <ObjectDataProvider x:Key="SeedPatternProvider"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:SeedPattern" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Window.Resources>
 
     <Grid>
@@ -28,7 +33,11 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <Label HorizontalAlignment="Right">Pattern :</Label>
-                <ComboBox Name="PatternComboBox" ItemsSource="{StaticResource ComboBoxItems}" />
+                <ComboBox Name="PatternComboBox">
+                    <ComboBox.ItemsSource>
+                        <Binding Source="{StaticResource SeedPatternProvider}" />
+                    </ComboBox.ItemsSource>
+                </ComboBox>
             </StackPanel>
             <Button Name="ApplyBtn" Grid.Column="1" Style="{StaticResource BtnBlue}" Click="StartAutomaton">
                 Apply
