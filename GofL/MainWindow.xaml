@@ -46,8 +46,17 @@
 
         <UniformGrid Grid.Row="1" Name="Grid" Background="Thistle" />
 
-        <Button Name="StopBtn" Grid.Row="2" Style="{StaticResource BtnLightRed}" Click="Stop">
-            Stop
-        </Button>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Name="StopBtn" Style="{StaticResource BtnLightRed}" Click="Stop">
+                Stop
+            </Button>
+            <Button Grid.Column="1" Name="ResetBtn" Style="{StaticResource BtnBlack}" Click="Reset">
+                Reset
+            </Button>
+        </Grid>
     </Grid>
 </Window>

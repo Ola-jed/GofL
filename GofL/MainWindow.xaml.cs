@@ -44,11 +44,12 @@ namespace GofL
         {
             Grid.Children.Clear();
             const int size = Columns * Rows;
+            var margin = new Thickness(2);
             for (ushort i = 0; i < size; i++)
             {
-                Grid.Children.Add(new Rectangle()
+                Grid.Children.Add(new Rectangle
                 {
-                    Margin = new Thickness(2),
+                    Margin = margin,
                     Fill = Brushes.DarkRed
                 });
             }
@@ -109,6 +110,17 @@ namespace GofL
         private void Stop(object sender, RoutedEventArgs e)
         {
             _automatonTimer.Stop();
+        }
+
+        /// <summary>
+        /// Reset the timer and the grid
+        /// </summary>
+        /// <param name="sender">The button clicked</param>
+        /// <param name="e">Clck event data</param>
+        private void Reset(object sender, RoutedEventArgs e)
+        {
+            _automatonTimer.Stop();
+            InitCells();
         }
     }
 }
